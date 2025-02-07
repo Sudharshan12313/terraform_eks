@@ -73,3 +73,23 @@ resource "aws_iam_role_policy_attachment" "ec2_container_registry_policy" {
   role       = aws_iam_role.eks_node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
+
+
+resource "aws_iam_policy" "grafana_cloudwatch" {
+  name        = "GrafanaCloudWatchAccess"
+  description = "Allow Grafana to read CloudWatch metrics"
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect   = "Allow",
+      Action   = ["cloudwatch:ListMetrics", "cloudwatch:GetMetricData", "logs:DescribeLogGroups", "logs:GetLogEvents"],
+      Resource = "*"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "grafana_policy_attachment" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = aws_iam_policy.grafana_cloudwatch.arn
+}
