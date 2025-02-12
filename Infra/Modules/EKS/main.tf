@@ -234,7 +234,7 @@ resource "helm_release" "grafana" {
   repository = "https://grafana.github.io/helm-charts"
   chart      = "grafana"
   namespace  = "monitoring"
-  create_namespace = false
+  create_namespace = true
 
   # ✅ Set LoadBalancer for External Access
   set {
